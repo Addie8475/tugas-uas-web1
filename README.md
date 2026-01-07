@@ -11,9 +11,8 @@ Dibangun dengan PHP, menggunakan framework css dan dirancang untuk dijalankan me
 - Struktur modular untuk memisahkan fungsi (module/artikel, module/home)
 - Template sederhana (`header`, `footer`, `sidebar`) dan file CSS untuk tampilan
 
-
 ## Struktur proyek 🔧
-Deskripsi singkat dari beberapa folder dan file penting agar mudah dipelajari dan dikembangkan, serta struktur folder secara visual:
+Deskripsi singkat tiap folder dan file penting agar mudah dipelajari dan dikembangkan, serta struktur folder secara visual:
 
 - `config.php` — konfigurasi koneksi database (konstanta `DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`).
 - `index.php` — titik masuk aplikasi; router sederhana yang memuat modul berdasarkan parameter `?url=`.
@@ -37,7 +36,7 @@ tugas_uas_web/
 ├─ config.php
 ├─ index.php
 ├─ README.md
-├─ role_migration.sql
+├─ .htaccess
 ├─ class/
 │  ├─ Database.php
 │  └─ Form.php
@@ -45,6 +44,7 @@ tugas_uas_web/
 │  ├─ artikel/
 │  │  ├─ index.php
 │  │  ├─ tambah.php
+│  │  ├─ submit_tambah.php
 │  │  ├─ ubah.php
 │  │  ├─ hapus.php
 │  │  └─ view.php
@@ -55,6 +55,7 @@ tugas_uas_web/
 │     ├─ tambah.php
 │     ├─ ubah.php
 │     ├─ hapus.php
+│     ├─ register.php
 │     ├─ login.php
 │     └─ logout.php
 ├─ style/
@@ -65,12 +66,14 @@ tugas_uas_web/
    └─ sidebar.php
 ```
 
+### Catatan singkat
+- Tombol dan aksi untuk **tambah/ubah/hapus** hanya tersedia untuk pengguna dengan `role = 'admin'` (baik di UI maupun server-side).
+- Pastikan tabel `users` memiliki kolom: `id`, `username`, `password` (hash), `nama`, `role`.
+- Saya sudah menambahkan folder `migrations/` berisi skrip SQL untuk penyesuaian skema (mis. menambahkan kolom `role` dan `nama`). Jika kolom `role` atau `nama` belum ada di tabel `users`, jalankan `migrations/000_add_role.sql` lalu `migrations/001_add_nama.sql`.
 
-Catatan penting dan rekomendasi:
-- Struktur dirancang agar mudah diperluas: menambah modul baru cukup membuat subfolder di `module/`.
-- Akses kontrol: fitur tambah/ubah/hapus dibatasi untuk pengguna dengan `role = 'admin'` (cek ada di `module/artikel/*` dan `module/user/*`).
-- Database `users` sebaiknya memiliki kolom: `id`, `username`, `password` (hash), `nama`, `role`.
-- Keamanan: pertimbangkan menambahkan CSRF token pada form, validasi server-side untuk semua input, dan cek unik `username` saat tambah user.
+### Registrasi pengguna
+- `module/user/register.php` — halaman registrasi pengguna: input `username`, `password` (minimal 8 karakter), `nama` (opsional), dan `role`.
+- Untuk keamanan, registrasi **admin** hanya bisa dilakukan jika `ADMIN_REG_CODE` diisi di `config.php` dan kode yang dimasukkan cocok. Jika `ADMIN_REG_CODE` kosong, pendaftaran admin dinonaktifkan dari UI.
 
 ## Penjelasan singkat modul 💡
 - `module/artikel/*`: berisi file untuk menampilkan daftar artikel, form tambah/ubah, dan aksi hapus/submit.
@@ -80,8 +83,11 @@ Catatan penting dan rekomendasi:
 
 ## Cara Menjalankan (Windows + XAMPP) ▶️
 1. Pastikan XAMPP terpasang dan Apache & MySQL dijalankan.
+
 2. Salin folder proyek ke `C:\xampp\htdocs\tugas_uas_web`.
+
 3. Sesuaikan pengaturan database di `config.php` (host, user, password, database).
+
 4. Buat database (mis. `tugas_uas`) dan tabel yang dibutuhkan. Contoh skema sederhana:
 
 ```sql
@@ -104,9 +110,11 @@ CREATE TABLE artikel (
 ```
 
 5. Akses aplikasi via browser: `http://localhost/tugas_uas_web/`.
+
 6. Login melalui `module/user/login.php` (atau link login pada UI) untuk mengelola artikel.
 
-> Catatan: jika Anda belum memiliki data, tambahkan user langsung lewat database (gunakan hash untuk password jika diinginkan).
+7. Jika belum memiliki akun, maka registrasi melalui `module/user/register.php`.
+
 
 ## Catatan pengembangan & keamanan ⚠️
 - Sanitasi input dan validasi pada `Form.php` sangat penting untuk mencegah SQL Injection dan XSS.
@@ -116,9 +124,14 @@ CREATE TABLE artikel (
 - Teknologi: PHP, MySQL, HTML, CSS
 - Lisensi: Bebas digunakan untuk tujuan pembelajaran (sesuaikan jika ingin lisensi lain)
 
+---
+
+
 ## Hasil Screenshot
 
-<img width="1167" height="649" alt="Login" src="https://github.com/user-attachments/assets/ec44affa-af45-42a7-ba5b-df8cd3179c15" />
+<img width="1339" height="630" alt="Login" src="https://github.com/user-attachments/assets/285b7185-d9c0-4442-9215-82b80c592ab1" />
+
+<img width="1340" height="633" alt="Registration" src="https://github.com/user-attachments/assets/c715f515-3f09-46bb-ad85-6b7aa2252ca8" />
 
 ### Administrator
 
