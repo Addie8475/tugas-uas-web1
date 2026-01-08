@@ -37,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($judul) && !empty($isi)) {
         $result = $db->update("artikel", [
             'judul' => $judul,
-            'isi'   => $isi
+            'isi'   => $isi,
+            'tanggal_ubah'   => $tanggal_ubah = date('Y-m-d H:i:s')
         ], $id);
 
         if ($result) {
@@ -80,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="info-item">
                 <span class="info-label">Terakhir Diubah:</span>
-                <span><?= date('d F Y', strtotime($artikel['tanggal'])) ?></span>
+                <span><?= date('d F Y', strtotime($artikel['tanggal_ubah'])) ?></span>
             </div>
         </div>
     </div>
